@@ -1,23 +1,22 @@
 import { ThemedText } from '@/components/ThemedText';
+import { useColorChange } from '@/hooks/useColorChange';
 import { homeScreenStyles } from '@/styles';
-import { generateRandomColor } from '@/utilities/generateRandomColors';
-import { useCallback, useState } from 'react';
 import {  View , SafeAreaView, TouchableWithoutFeedback} from 'react-native';
 
 
+interface InfoProps {
+  label: string;
+  value: string | number;
+  style: object;
+}
+
+const Info: React.FC<InfoProps> = ({ label, value, style }) => (
+  <ThemedText style={style}>{label}: {value}</ThemedText>
+);
 
 export default function HomeScreen() {
-  const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
-  const [tapCount, setTapCount] = useState(0);
+  const { backgroundColor, tapCount, handleScreenTap } = useColorChange();
   const message = 'Hello there';
-
-
-  const handleScreenTap = useCallback(() => {
-     // generate random color and set has background color
-    setBackgroundColor(generateRandomColor());
-    setTapCount(prevCount => prevCount + 1); // increment tap count
-  }, []);
-
 
 
   return (
@@ -25,8 +24,16 @@ export default function HomeScreen() {
       <TouchableWithoutFeedback onPress={handleScreenTap}>
         <View style={[homeScreenStyles.container, { backgroundColor }]}>
           <ThemedText type='title' style={homeScreenStyles.mainText}>{message}</ThemedText>
-          <ThemedText style={homeScreenStyles.colorInfo}>Current Color: {backgroundColor}</ThemedText>
-          <ThemedText style={homeScreenStyles.tapCount}>Taps: {tapCount}</ThemedText>
+          <Info 
+            label="Current Color" 
+            value={backgroundColor} 
+            style={homeScreenStyles.colorInfo} 
+          />
+          <Info 
+            label="Taps" 
+            value={tapCount} 
+            style={homeScreenStyles.tapCount} 
+          />
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
