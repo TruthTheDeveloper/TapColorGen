@@ -1,39 +1,32 @@
 import { ThemedText } from '@/components/ThemedText';
-import { useEffect, useState } from 'react';
-import { StyleSheet, View , Text, SafeAreaView, TouchableWithoutFeedback} from 'react-native';
+import { homeScreenStyles } from '@/styles';
+import { generateRandomColor } from '@/utilities/generateRandomColors';
+import { useCallback, useState } from 'react';
+import {  View , SafeAreaView, TouchableWithoutFeedback} from 'react-native';
+
+
 
 export default function HomeScreen() {
-
   const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
   const [tapCount, setTapCount] = useState(0);
-  const [message, setMessage] = useState('Hello there');
-
-  
-  const generateRandomColor = () => {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
-  };
-
-  const handleScreenTap = () => {
-    const newColor = generateRandomColor();
-    setBackgroundColor(newColor);
-    setTapCount(prevCount => prevCount + 1);
+  const message = 'Hello there';
 
 
+  const handleScreenTap = useCallback(() => {
+     // generate random color and set has background color
+    setBackgroundColor(generateRandomColor());
+    setTapCount(prevCount => prevCount + 1); // increment tap count
+  }, []);
 
-  }
 
-  
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={homeScreenStyles.safeArea}>
       <TouchableWithoutFeedback onPress={handleScreenTap}>
-        <View style={[styles.container, { backgroundColor }]}>
-          <ThemedText type='title'>{message}</ThemedText>
-          <ThemedText style={styles.colorInfo}>Current Color: {backgroundColor}</ThemedText>
-          <ThemedText style={styles.tapCount}>Taps: {tapCount}</ThemedText>
+        <View style={[homeScreenStyles.container, { backgroundColor }]}>
+          <ThemedText type='title' style={homeScreenStyles.mainText}>{message}</ThemedText>
+          <ThemedText style={homeScreenStyles.colorInfo}>Current Color: {backgroundColor}</ThemedText>
+          <ThemedText style={homeScreenStyles.tapCount}>Taps: {tapCount}</ThemedText>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
@@ -43,22 +36,3 @@ export default function HomeScreen() {
   
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  colorInfo: {
-    fontSize: 16,
-  },
-
-  tapCount: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-});
